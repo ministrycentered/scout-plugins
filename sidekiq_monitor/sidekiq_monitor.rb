@@ -57,6 +57,13 @@ class SidekiqMonitor < Scout::Plugin
         counter("#{name}_per_minute".to_sym, stats.send(name), :per => :minute)
       end
 
+      latencies = Sidekiq::Queue.all.map do |queue|
+        queue.latency
+      end
+
+      longest = latencies.max ? latencies.max : 0
+      report(latency: longest)
+
       Sidekiq.redis do |conn|
         running = conn.scard('workers').to_i
         report(:running => running)
@@ -68,4 +75,3 @@ class SidekiqMonitor < Scout::Plugin
                   "#{e.message} \n\nMake certain you've specified the correct host and port, DB, username, and password, and that Redis is accepting connections.\n\n#{e.backtrace}" )
   end
 end
-

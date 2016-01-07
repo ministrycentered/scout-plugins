@@ -23,6 +23,10 @@ metadata:
     label: Running
     units: ""
     precision: "0"
+  latency:
+    label: Latency
+    units: seconds
+    precision: "0"
   processed_per_minute:
     label: Processed Rate
     units: /min
